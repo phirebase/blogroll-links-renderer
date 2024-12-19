@@ -67,5 +67,3 @@ Yes, you can add a custom CSS class in the plugin settings. Navigate to `Setting
 
 = 1.0 =
 * Initial public release
-
- 
