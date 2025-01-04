@@ -1,200 +1,280 @@
 <?php
-/*
+/**
 Plugin Name: Blogroll Links Renderer
-Version: 1.0
+Version: 1.0.0
 Description: Renders WordPress Blogroll links to a Page or Post using the shortcode [blogroll-links]. Ideal for creating a custom links page.
 Author: phirebase
-Text Domain: blogroll-links-renderer
 Author URI: https://phirebase.com/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-*/
+Text Domain: blogroll-links-renderer
+ *
+ * @package BlogrollLinksRenderer
+ */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
+/**
+ * Load the plugin's text domain for translations.
+ */
+function blr_load_textdomain() {
+	load_plugin_textdomain(
+		'blogroll-links-renderer',
+		false,
+		dirname( plugin_basename( __FILE__ ) ) . '/languages'
+	);
+}
+add_action( 'init', 'blr_load_textdomain' );
 
 /**
  * Forces the WordPress Links Manager to the desired state.
  */
 function blr_force_links_manager_state() {
-    $enable_links_manager = get_option('blr_enable_links_manager', false);
+	$enable_links_manager = get_option( 'blr_enable_links_manager', false );
 
-    if ($enable_links_manager) {
-        add_filter('pre_option_link_manager_enabled', '__return_true');
-        update_option('link_manager_enabled', 1);
-    } else {
-        add_filter('pre_option_link_manager_enabled', '__return_false');
-        delete_option('link_manager_enabled');
-    }
+	if ( $enable_links_manager ) {
+		add_filter( 'pre_option_link_manager_enabled', '__return_true' );
+		update_option( 'link_manager_enabled', 1 );
+	} else {
+		add_filter( 'pre_option_link_manager_enabled', '__return_false' );
+		delete_option( 'link_manager_enabled' );
+	}
 }
-add_action('admin_init', 'blr_force_links_manager_state');
+add_action( 'admin_init', 'blr_force_links_manager_state' );
 
 /**
  * Hides the Links menu from the WordPress admin if the Links Manager is disabled.
  */
 function blr_hide_links_menu() {
-    $enable_links_manager = get_option('blr_enable_links_manager', false);
+	$enable_links_manager = get_option( 'blr_enable_links_manager', false );
 
-    if (!$enable_links_manager) {
-        remove_menu_page('link-manager.php');
-    }
+	// Check user permissions before removing the menu page.
+	if ( current_user_can( 'manage_options' ) && ! $enable_links_manager ) {
+		remove_menu_page( 'link-manager.php' );
+	}
 }
-add_action('admin_menu', 'blr_hide_links_menu', 99);
+add_action( 'admin_menu', 'blr_hide_links_menu', 99 );
 
 /**
- * Adds custom CSS for consistent image size.
+ * Enqueues custom styles for the plugin in both frontend and admin.
+ *
+ * This function conditionally loads a custom stylesheet for the
+ * Blogroll Links Renderer plugin on the settings page.
+ *
+ * @param string $hook The current admin page being rendered, passed by WordPress.
+ *                     Used to ensure the stylesheet is only loaded on the plugin's settings page.
  */
-function blr_add_custom_styles() {
-    echo '<style>
-        .blogroll-link-image {
-            width: 16px !important;
-            height: 16px !important;
-        }
-    </style>';
+function blr_enqueue_styles( $hook ) {
+	if ( 'settings_page_blogroll-links-renderer' === $hook ) {
+		wp_enqueue_style(
+			'blr-custom-style',
+			plugins_url( 'css/blogroll-style.css', __FILE__ ),
+			array(),
+			'1.0',
+			'all'
+		);
+	}
 }
-add_action('wp_head', 'blr_add_custom_styles');
+add_action( 'admin_enqueue_scripts', 'blr_enqueue_styles' );
 
 /**
  * Wrapper function for handling both local and external images.
+ *
+ * This function generates HTML for displaying images associated with a link,
+ * handling both local WordPress media library images and external image URLs.
+ *
+ * @param object $link An object containing link properties. The 'link_image'
+ *                     property specifies the image URL, and 'link_name'
+ *                     provides the alt text.
+ * @return string The HTML markup for the image, or an empty string if no image is set.
  */
-function blr_get_image_html($link) {
-    $image_html = '';
-    if (!empty($link->link_image)) {
-        $image_id = attachment_url_to_postid($link->link_image);
-        if (!empty($image_id) && is_numeric($image_id)) {
-            // Lokální obrázky - bezpečné vykreslení pomocí wp_get_attachment_image
-            $image_html = wp_get_attachment_image(
-                $image_id,
-                'thumbnail',
-                false,
-                [
-                    'class' => 'blogroll-link-image',
-                    'alt'   => esc_attr($link->link_name),
-                ]
-            );
-        } else {
-            // Externí obrázky - přímé vykreslení
-            $image_html = sprintf(
-                '<img src="%s" alt="%s" class="blogroll-link-image" loading="lazy" decoding="async">', // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
-                esc_url($link->link_image),
-                esc_attr($link->link_name)
-            );
-        }
-    }
-    return $image_html;
+function blr_get_image_html( $link ) {
+	$image_html = '';
+	if ( ! empty( $link->link_image ) ) {
+		$image_id = attachment_url_to_postid( $link->link_image );
+		if ( ! empty( $image_id ) && is_numeric( $image_id ) ) {
+			// Local images - safe rendering using wp_get_attachment_image.
+			$image_html = wp_get_attachment_image(
+				$image_id,
+				'thumbnail',
+				false,
+				array(
+					'class'  => 'blr-blogroll-link-image',
+					'alt'    => esc_attr( $link->link_name ),
+					'width'  => 16,
+					'height' => 16,
+				)
+			);
+			$image_html = str_replace( '<img ', '<img width="16" height="16" ', $image_html );
+		} else {
+			// External images - direct rendering.
+			$image_html = sprintf(
+				'<img src="%s" alt="%s" class="blr-blogroll-link-image" loading="lazy" decoding="async" width="16" height="16">', // phpcs:ignore PluginCheck.CodeAnalysis.ImageFunctions.NonEnqueuedImage
+				esc_url( $link->link_image ),
+				esc_attr( $link->link_name )
+			);
+		}
+	}
+	return $image_html;
 }
 
 /**
  * Renders blogroll links using the shortcode [blogroll-links].
+ *
+ * This function generates a list of links from the WordPress Links Manager,
+ * optionally filtering by category and including options to show images and titles.
+ *
+ * @param array $atts {
+ *     Optional. Attributes for the shortcode.
+ *
+ *     @type string $category    The category to filter links by. Default is empty (no filter).
+ *     @type bool   $show_images Whether to display link images. Default is true.
+ *     @type bool   $show_titles Whether to display link titles (tooltips). Default is false.
+ * }
+ * @return string The HTML output of the rendered blogroll links.
  */
-function blr_render_blogroll_links($atts) {
-    $atts = shortcode_atts([
-        'category' => '',
-        'show_images' => null,
-        'show_titles' => 0,
-    ], $atts, 'blogroll-links');
+function blr_render_blogroll_links( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'category'    => '',
+			'show_images' => null,
+			'show_titles' => 0,
+		),
+		$atts,
+		'blogroll-links'
+	);
 
-    $category = sanitize_text_field($atts['category']);
-    $show_images = isset($atts['show_images']) ? filter_var($atts['show_images'], FILTER_VALIDATE_BOOLEAN) : true;
-    $show_titles = filter_var($atts['show_titles'], FILTER_VALIDATE_BOOLEAN);
+	$category    = sanitize_text_field( $atts['category'] );
+	$show_images = isset( $atts['show_images'] ) ? filter_var( $atts['show_images'], FILTER_VALIDATE_BOOLEAN ) : true;
+	$show_titles = filter_var( $atts['show_titles'], FILTER_VALIDATE_BOOLEAN );
 
-    $custom_class = get_option('blr_custom_class', '');
+	$custom_class = get_option( 'blr_custom_class', '' );
 
-    $args = [
-        'orderby' => 'name',
-        'order' => 'ASC',
-    ];
-    if (!empty($category)) {
-        $args['category_name'] = $category;
-    }
+	$args = array(
+		'orderby' => 'name',
+		'order'   => 'ASC',
+	);
+	if ( ! empty( $category ) ) {
+		$args['category_name'] = $category;
+	}
 
-    $links = get_bookmarks($args);
+	$links = get_bookmarks( $args );
 
-    if (empty($links)) {
-        return '<p>' . esc_html__('No links found.', 'blogroll-links-renderer') . '</p>';
-    }
+	if ( empty( $links ) ) {
+		return '<p>' . esc_html__( 'No links found.', 'blogroll-links-renderer' ) . '</p>';
+	}
 
-    ob_start();
-    echo '<div class="' . esc_attr(trim('blogroll-links ' . $custom_class)) . '">';
+	ob_start();
+	echo '<div class="' . esc_attr( trim( 'blogroll-links ' . $custom_class ) ) . '">';
 
-    foreach ($links as $link) {
-        $title_attribute = ($show_titles && !empty($link->link_description)) ? esc_attr($link->link_description) : '';
-        $image_html = $show_images ? blr_get_image_html($link) : '';
+	foreach ( $links as $link ) {
+		$title_attribute = ( $show_titles && ! empty( $link->link_description ) ) ? esc_attr( $link->link_description ) : '';
+		$image_html      = $show_images ? blr_get_image_html( $link ) : '';
 
-        printf(
-            '<div class="blogroll-link">
+		printf(
+			'<div class="blogroll-link">
                 <a href="%s" target="_blank" rel="noopener noreferrer" title="%s">
                     %s <span class="blogroll-link-name">%s</span>
                 </a>
             </div>',
-            esc_url($link->link_url),
-            esc_attr($title_attribute),
-            wp_kses_post($image_html),
-            esc_html($link->link_name)
-        );
-    }
+			esc_url( $link->link_url ),
+			esc_attr( $title_attribute ),
+			wp_kses_post( $image_html ),
+			esc_html( $link->link_name )
+		);
+	}
 
-    echo '</div>';
-    return ob_get_clean();
+	echo '</div>';
+	return ob_get_clean();
 }
-add_shortcode('blogroll-links', 'blr_render_blogroll_links');
+add_shortcode( 'blogroll-links', 'blr_render_blogroll_links' );
 
 /**
  * Adds a settings page under the "Settings" menu.
  */
 function blr_add_settings_page() {
-    add_options_page(
-        __('Blogroll Links Renderer Settings', 'blogroll-links-renderer'),
-        __('Blogroll Links Renderer', 'blogroll-links-renderer'),
-        'manage_options',
-        'blogroll-links-renderer',
-        'blr_settings_page_callback'
-    );
+	add_options_page(
+		__( 'Blogroll Links Renderer Settings', 'blogroll-links-renderer' ),
+		__( 'Blogroll Links Renderer', 'blogroll-links-renderer' ),
+		'manage_options',
+		'blogroll-links-renderer',
+		'blr_settings_page_callback'
+	);
 }
-add_action('admin_menu', 'blr_add_settings_page');
+add_action( 'admin_menu', 'blr_add_settings_page' );
 
 /**
  * Renders the plugin settings page.
  */
 function blr_settings_page_callback() {
-    ?>
-    <div class="wrap">
-        <h1><?php esc_html_e('Blogroll Links Renderer Settings', 'blogroll-links-renderer'); ?></h1>
-        
-        <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; border-radius: 5px;">
-            <h2><?php esc_html_e('How to use:', 'blogroll-links-renderer'); ?></h2>
-            <p><code>[blogroll-links]</code>: <?php esc_html_e('Display all links.', 'blogroll-links-renderer'); ?></p>
-            <p><code>[blogroll-links category="MyCategory"]</code>: <?php esc_html_e('Filter links by category name.', 'blogroll-links-renderer'); ?></p>
-            <p><code>[blogroll-links show_images="1"]</code>: <?php esc_html_e('Show link images/icons if available.', 'blogroll-links-renderer'); ?></p>
-            <p><code>[blogroll-links show_titles="1"]</code>: <?php esc_html_e('Add link descriptions as tooltips.', 'blogroll-links-renderer'); ?></p>
-        </div>
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Blogroll Links Renderer Settings', 'blogroll-links-renderer' ); ?></h1>
+		<div class="blr-blogroll-settings-box">
+			<h2><?php esc_html_e( 'How to use:', 'blogroll-links-renderer' ); ?></h2>
+			<p><code>[blogroll-links]</code>: <?php esc_html_e( 'Display all links.', 'blogroll-links-renderer' ); ?></p>
+			<p><code>[blogroll-links category="MyCategory"]</code>: <?php esc_html_e( 'Filter links by category name.', 'blogroll-links-renderer' ); ?></p>
+			<p><code>[blogroll-links show_images="1"]</code>: <?php esc_html_e( 'Show link images/icons if available.', 'blogroll-links-renderer' ); ?></p>
+			<p><code>[blogroll-links show_titles="1"]</code>: <?php esc_html_e( 'Add link descriptions as tooltips.', 'blogroll-links-renderer' ); ?></p>
+		</div>        
+		<form method="post" action="options.php">
+			<?php settings_fields( 'blr_settings_group' ); ?>
+			<?php do_settings_sections( 'blr_settings_group' ); ?>
 
-        <form method="post" action="options.php">
-            <?php settings_fields('blr_settings_group'); ?>
-            <?php do_settings_sections('blr_settings_group'); ?>
+			<div class="blr-blogroll-settings-box">
+				<h2><?php esc_html_e( 'Enable Links Manager', 'blogroll-links-renderer' ); ?></h2>
+				<input type="checkbox" name="blr_enable_links_manager" value="1" <?php checked( get_option( 'blr_enable_links_manager', false ), true ); ?> />
+				<label for="blr_enable_links_manager"><?php esc_html_e( 'Enable', 'blogroll-links-renderer' ); ?></label>
+			</div>
 
-            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; border-radius: 5px;">
-                <h2><?php esc_html_e('Enable Links Manager', 'blogroll-links-renderer'); ?></h2>
-                <input type="checkbox" name="blr_enable_links_manager" value="1" <?php checked(get_option('blr_enable_links_manager', false), true); ?> />
-                <label for="blr_enable_links_manager"><?php esc_html_e('Enable Links Manager', 'blogroll-links-renderer'); ?></label>
-            </div>
+			<div class="blr-blogroll-settings-box">
+				<h2><?php esc_html_e( 'Custom CSS Class', 'blogroll-links-renderer' ); ?></h2>
+				<input type="text" name="blr_custom_class" value="<?php echo esc_attr( get_option( 'blr_custom_class', '' ) ); ?>" />
+			</div>
 
-            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; border-radius: 5px;">
-                <h2><?php esc_html_e('Custom CSS Class', 'blogroll-links-renderer'); ?></h2>
-                <input type="text" name="blr_custom_class" value="<?php echo esc_attr(get_option('blr_custom_class', '')); ?>" />
-            </div>
-
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <?php
+			<?php submit_button(); ?>
+		</form>
+	</div>
+	<?php
 }
+
+/**
+ * Add "Settings" link to plugin list actions.
+ *
+ * This function adds a "Settings" link to the list of action links
+ * displayed under the plugin name on the Plugins admin page.
+ *
+ * @param array $links An array of existing action links for the plugin.
+ *                     Each link is a string of HTML markup.
+ * @return array The modified array of action links with the "Settings" link added.
+ */
+function blr_add_settings_link( $links ) {
+	$settings_link = '<a href="' . admin_url( 'options-general.php?page=blogroll-links-renderer' ) . '">' . __( 'Settings', 'blogroll-links-renderer' ) . '</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'blr_add_settings_link' );
 
 /**
  * Registers settings.
  */
 function blr_register_settings() {
-    register_setting('blr_settings_group', 'blr_enable_links_manager');
-    register_setting('blr_settings_group', 'blr_custom_class');
+	register_setting( 'blr_settings_group', 'blr_custom_class', 'sanitize_text_field' );
+	register_setting(
+		'blr_settings_group',
+		'blr_enable_links_manager',
+		function ( $input ) {
+			return '1' === $input ? 1 : 0;
+		}
+	);
 }
-add_action('admin_init', 'blr_register_settings');
+add_action( 'admin_init', 'blr_register_settings' );
+
+/**
+ * Cleanup options when the plugin is uninstalled.
+ */
+function blr_cleanup_options() {
+	delete_option( 'blr_enable_links_manager' );
+	delete_option( 'blr_custom_class' );
+}
+register_uninstall_hook( __FILE__, 'blr_cleanup_options' );
 ?>

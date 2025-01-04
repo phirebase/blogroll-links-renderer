@@ -1,11 +1,10 @@
 === Blogroll Links Renderer ===
 Contributors: brtak
-Donate link: https://phirebase.com/ 
-Tags: blogroll, links, shortcode, custom links, renderer  
-Requires at least: 5.0  
+Tags: blogroll, links, shortcode, renderer  
+Requires at least: 5.2  
 Tested up to: 6.7  
-Stable tag: 1.0  
-Requires PHP: 7.4  
+Stable tag: 1.0.0
+Requires PHP: 7.4
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -65,5 +64,5 @@ Yes, you can add a custom CSS class in the plugin settings. Navigate to `Setting
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 * Initial public release

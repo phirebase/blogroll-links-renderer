@@ -1,0 +1,90 @@
+# Copyright (C) 2025 phirebase
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blogroll Links Renderer 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blogroll-links-"
+"renderer\n"
+"POT-Creation-Date: 2025-01-04T22:59:06+00:00\n"
+"PO-Revision-Date: 2025-01-05 00:05+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+"X-Domain: blogroll-links-renderer\n"
+
+#. Plugin Name of the plugin
+#: C:\Users\david\Local
+#: Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+#: blogroll-links-renderer.php:197
+msgid "Blogroll Links Renderer"
+msgstr "Blogroll správa odkazů"
+
+#. Description of the plugin
+#: C:\Users\david\Local
+#: Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid ""
+"Renders WordPress Blogroll links to a Page or Post using the shortcode "
+"[blogroll-links]. Ideal for creating a custom links page."
+msgstr ""
+"Zobrazí Blogroll odkazy na stránce nebo v příspěvku pomocí zkratky "
+"[blogroll-links]. Ideální pro vytvoření vlastní stránky s odkazy."
+
+#. Author of the plugin
+#: C:\Users\david\Local
+#: Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid "phirebase"
+msgstr "phirebase"
+
+#. Author URI of the plugin
+#: C:\Users\david\Local
+#: Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid "https://phirebase.com/"
+msgstr "https://phirebase.com/"
+
+#: blogroll-links-renderer.php:163
+msgid "No links found."
+msgstr "Nebyly nalezeny žádné odkazy."
+
+#: blogroll-links-renderer.php:196 blogroll-links-renderer.php:211
+msgid "Blogroll Links Renderer Settings"
+msgstr "Nastavení zobrazení odkazů"
+
+#: blogroll-links-renderer.php:213
+msgid "How to use:"
+msgstr "Jak to používat:"
+
+#: blogroll-links-renderer.php:214
+msgid "Display all links."
+msgstr "Zobrazení všech odkazů."
+
+#: blogroll-links-renderer.php:215
+msgid "Filter links by category name."
+msgstr "Filtrování odkazů podle názvu kategorie."
+
+#: blogroll-links-renderer.php:216
+msgid "Show link images/icons if available."
+msgstr "Zobrazte obrázky/ikony odkazů, pokud jsou k dispozici."
+
+#: blogroll-links-renderer.php:217
+msgid "Add link descriptions as tooltips."
+msgstr "Přidání popisů odkazů."
+
+#: blogroll-links-renderer.php:224
+msgid "Enable Links Manager"
+msgstr "Povolení správce odkazů"
+
+#: blogroll-links-renderer.php:226
+msgid "Enable"
+msgstr "Povolit"
+
+#: blogroll-links-renderer.php:230
+msgid "Custom CSS Class"
+msgstr "Vlastí CSS třída"
+
+#: blogroll-links-renderer.php:251
+msgid "Settings"
+msgstr "Nastavení"

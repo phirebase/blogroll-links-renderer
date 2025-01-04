@@ -1,0 +1,81 @@
+# Copyright (C) 2025 phirebase
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blogroll Links Renderer 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blogroll-links-renderer\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-01-04T22:59:06+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: blogroll-links-renderer\n"
+
+#. Plugin Name of the plugin
+#: C:\Users\david\Local Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+#: blogroll-links-renderer.php:197
+msgid "Blogroll Links Renderer"
+msgstr ""
+
+#. Description of the plugin
+#: C:\Users\david\Local Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid "Renders WordPress Blogroll links to a Page or Post using the shortcode [blogroll-links]. Ideal for creating a custom links page."
+msgstr ""
+
+#. Author of the plugin
+#: C:\Users\david\Local Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid "phirebase"
+msgstr ""
+
+#. Author URI of the plugin
+#: C:\Users\david\Local Sites\phirebasecom\app\public\wp-content\plugins\blogroll-links-renderer\blogroll-links-renderer.php
+msgid "https://phirebase.com/"
+msgstr ""
+
+#: blogroll-links-renderer.php:163
+msgid "No links found."
+msgstr ""
+
+#: blogroll-links-renderer.php:196
+#: blogroll-links-renderer.php:211
+msgid "Blogroll Links Renderer Settings"
+msgstr ""
+
+#: blogroll-links-renderer.php:213
+msgid "How to use:"
+msgstr ""
+
+#: blogroll-links-renderer.php:214
+msgid "Display all links."
+msgstr ""
+
+#: blogroll-links-renderer.php:215
+msgid "Filter links by category name."
+msgstr ""
+
+#: blogroll-links-renderer.php:216
+msgid "Show link images/icons if available."
+msgstr ""
+
+#: blogroll-links-renderer.php:217
+msgid "Add link descriptions as tooltips."
+msgstr ""
+
+#: blogroll-links-renderer.php:224
+msgid "Enable Links Manager"
+msgstr ""
+
+#: blogroll-links-renderer.php:226
+msgid "Enable"
+msgstr ""
+
+#: blogroll-links-renderer.php:230
+msgid "Custom CSS Class"
+msgstr ""
+
+#: blogroll-links-renderer.php:251
+msgid "Settings"
+msgstr ""
