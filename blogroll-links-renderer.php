@@ -26,20 +26,55 @@ function blr_load_textdomain() {
 add_action( 'init', 'blr_load_textdomain' );
 
 /**
- * Forces the WordPress Links Manager to the desired state.
+ * Initialize default option value on plugin activation.
+ */
+function blr_activate_plugin() {
+	if ( get_option( 'blr_enable_links_manager' ) === false ) {
+		// Set default to false if the option does not exist.
+		add_option( 'blr_enable_links_manager', 0 );
+	}
+}
+register_activation_hook( __FILE__, 'blr_activate_plugin' );
+
+/**
+ * Hook to force the Links Manager state on every admin load.
  */
 function blr_force_links_manager_state() {
 	$enable_links_manager = get_option( 'blr_enable_links_manager', false );
 
 	if ( $enable_links_manager ) {
+		// Enable the Links Manager.
 		add_filter( 'pre_option_link_manager_enabled', '__return_true' );
 		update_option( 'link_manager_enabled', 1 );
 	} else {
+		// Disable the Links Manager.
 		add_filter( 'pre_option_link_manager_enabled', '__return_false' );
 		delete_option( 'link_manager_enabled' );
 	}
 }
 add_action( 'admin_init', 'blr_force_links_manager_state' );
+
+/**
+ * Hook to handle the saving of settings.
+ *
+ * This function updates or deletes the Links Manager option
+ * based on the new value of the setting.
+ *
+ * @param mixed $old_value The old value of the option before the update.
+ * @param mixed $new_value The new value of the option after the update.
+ */
+function blr_save_links_manager_setting( $old_value, $new_value ) {
+	// Update Links Manager state immediately after the setting changes.
+	if ( $new_value ) {
+		update_option( 'link_manager_enabled', 1 );
+	} else {
+		delete_option( 'link_manager_enabled' );
+	}
+
+	// Force the update immediately.
+	blr_force_links_manager_state();
+}
+add_action( 'update_option_blr_enable_links_manager', 'blr_save_links_manager_setting', 10, 2 );
 
 /**
  * Hides the Links menu from the WordPress admin if the Links Manager is disabled.
