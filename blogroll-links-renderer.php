@@ -13,17 +13,30 @@ Text Domain: blogroll-links-renderer
  */
 
 defined( 'ABSPATH' ) || exit;
+
 /**
- * Load the plugin's text domain for translations.
+ * Conditionally load the plugin's text domain for translations.
+ * This ensures compatibility for environments outside WordPress.org.
  */
-function blrp_load_textdomain() {
-	load_plugin_textdomain(
-		'blogroll-links-renderer',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
+if ( ! function_exists( 'wp_get_environment_type' ) || wp_get_environment_type() !== 'production' ) {
+	/**
+	 * Load the plugin's text domain for translations.
+	 *
+	 * This function ensures that translation files are loaded
+	 * for environments outside of WordPress.org, such as GitHub.
+	 * The function is executed conditionally based on the environment.
+	 *
+	 * @return void
+	 */
+	function blrp_load_textdomain() {
+		load_plugin_textdomain(
+			'blogroll-links-renderer',
+			false,
+			dirname( plugin_basename( __FILE__ ) ) . '/languages'
+		);
+	}
+	add_action( 'init', 'blrp_load_textdomain' );
 }
-add_action( 'init', 'blrp_load_textdomain' );
 
 /**
  * Initialize default option value on plugin activation.
@@ -257,9 +270,10 @@ function blrp_settings_page_callback() {
 
 			<div class="blrp-blogroll-settings-box">
 				<h2><?php esc_html_e( 'Enable Links Manager', 'blogroll-links-renderer' ); ?></h2>
-				<input type="checkbox" name="blrp_enable_links_manager" value="1" <?php checked( get_option( 'blrp_enable_links_manager', false ), true ); ?> />
+				<input type="checkbox" id="blrp_enable_links_manager" name="blrp_enable_links_manager" value="1" <?php checked( get_option( 'blrp_enable_links_manager', false ), true ); ?> />
 				<label for="blrp_enable_links_manager"><?php esc_html_e( 'Enable', 'blogroll-links-renderer' ); ?></label>
 			</div>
+
 
 			<div class="blrp-blogroll-settings-box">
 				<h2><?php esc_html_e( 'Custom CSS Class', 'blogroll-links-renderer' ); ?></h2>
