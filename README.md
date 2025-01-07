@@ -1,12 +1,10 @@
-=== Blogroll Links Renderer ===
-Contributors: brtak
-Tags: blogroll, links, shortcode, renderer  
-Requires at least: 5.2  
-Tested up to: 6.7  
-Stable tag: 1.0.0
-Requires PHP: 7.4
-License: GPLv2 or later  
-License URI: https://www.gnu.org/licenses/gpl-2.0.html  
+=== Blogroll Links Renderer ===  
+Contributors: brtak  
+Tags: blogroll, links, shortcode, renderer   
+Tested up to: 6.7   
+Stable tag: 1.0.0 
+License: GPLv2 or later   
+License URI: https://www.gnu.org/licenses/gpl-2.0.html    
 
 Render WordPress Blogroll links on any Page or Post using the shortcode `[blogroll-links]`.
 
