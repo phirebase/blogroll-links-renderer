@@ -2,7 +2,8 @@
 Contributors: brtak  
 Tags: blogroll, links, shortcode, renderer   
 Tested up to: 6.7.1   
-Stable tag: 1.0.0  
+Stable tag: 1.0.1    
+Donate link: https://paypal.me/DavidKlhufek  
 License: GPLv2 or later   
 License URI: https://www.gnu.org/licenses/gpl-2.0.html    
 
@@ -11,6 +12,13 @@ Render WordPress Blogroll links on any Page or Post using the shortcode `[blogro
 == Description ==
 
 Easily display WordPress Blogroll links with the shortcode `[blogroll-links]` and its customizable options.
+
+**Features:**  
+- Display WordPress Blogroll links directly on your site.  
+- Filter links by category or show only specific links.  
+- Optionally display icons/images alongside each link.  
+- Customize the layout with a custom CSS class via settings.  
+- Simple setup via `Settings > Blogroll Links Renderer`.  
 
 **Shortcode Parameters:**  
 - **`category`**: Filter links by category name.  
@@ -21,13 +29,6 @@ Easily display WordPress Blogroll links with the shortcode `[blogroll-links]` an
   Example: `[blogroll-links show_titles="1"]`.  
 - Combine all options for advanced usage.  
   Example: `[blogroll-links category="MyCategory" show_images=1 show_titles=1]`.
-
-**Features:**  
-- Display WordPress Blogroll links directly on your site.  
-- Filter links by category or show only specific links.  
-- Optionally display icons/images alongside each link.  
-- Customize the layout with a custom CSS class via settings.  
-- Simple setup via `Settings > Blogroll Links Renderer`.
 
 **Enable WordPress Links Manager**:  
 The WordPress Links Manager, hidden by default since WordPress 3.5, can be reactivated using this plugin.  
@@ -61,6 +62,10 @@ Example: `[blogroll-links show_titles="1"]`.
 Yes, you can add a custom CSS class in the plugin settings. Navigate to `Settings > Blogroll Links Renderer` and enter your desired CSS class.
 
 == Changelog ==
+
+= 1.0.1 =
+
+Updated README.md
 
 = 1.0.0 =
 * Initial public release

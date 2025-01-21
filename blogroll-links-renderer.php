@@ -1,7 +1,7 @@
 <?php
 /**
 Plugin Name: Blogroll Links Renderer
-Version: 1.0.0
+Version: 1.0.1
 Description: Renders WordPress Blogroll links to a Page or Post using the shortcode [blogroll-links]. Ideal for creating a custom links page.
 Author: phirebase
 Author URI: https://phirebase.com/
