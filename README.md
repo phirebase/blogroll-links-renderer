@@ -1,6 +1,6 @@
 # Blogroll Links Renderer
 
-![WordPress Tested](https://img.shields.io/badge/WordPress-6.8-blue)
+![WordPress Tested](https://img.shields.io/badge/WordPress-6.9-blue)
 ![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue)
 ![License](https://img.shields.io/badge/License-GPLv2-orange)
 [![Issues](https://img.shields.io/github/issues/phirebase/blogroll-links-renderer)](https://github.com/phirebase/blogroll-links-renderer/issues)
@@ -99,7 +99,7 @@ Yes. Add a custom CSS class in the plugin settings and target it with your own C
 
 - This plugin restores functionality hidden since WordPress 3.5  
 - Compatible with custom link categories and WordPress themes  
-- Tested with WordPress 5.5+ up to 6.8
+- Tested with WordPress 5.5+ up to 6.9
 
 ---
 
