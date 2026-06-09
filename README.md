@@ -1,6 +1,6 @@
 # Blogroll Links Renderer
 
-![WordPress Tested](https://img.shields.io/badge/WordPress-6.9-blue)
+![WordPress Tested](https://img.shields.io/badge/WordPress-7.0-blue)
 ![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue)
 ![License](https://img.shields.io/badge/License-GPLv2-orange)
 [![Issues](https://img.shields.io/github/issues/phirebase/blogroll-links-renderer)](https://github.com/phirebase/blogroll-links-renderer/issues)
